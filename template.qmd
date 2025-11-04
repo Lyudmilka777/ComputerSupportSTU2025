@@ -1,0 +1,117 @@
+---
+title: "(Trenčín)"
+author: "Luidmila Filippova"
+date: "10/27/2024"
+format:
+  html:
+    embed-resources: true
+editor: source
+---
+
+## Question 1: Exploring Atomic Data Types
+
+### Description
+
+
+```{r}
+trencin_avg_temp <- 9.5
+trencin_area_sqkm <- 82.6
+trencin_elevation_m <- 210.0
+trencin_growth_rate <- 0.002
+
+trencin_population <- as.integer(55500)
+trencin_districts_count <- 1L
+trencin_first_mention_year <- as.integer(1069)
+
+is_unesco_site_present <- FALSE
+has_sea_access <- FALSE
+
+city_name <- "Trenčín"
+city_region <- "Trenčín Region"
+main_river <- "Váh"
+cat(city_name, "was first mentioned in", trencin_first_mention_year, 
+    "with an average annual temperature of", trencin_avg_temp, "°C, and its UNESCO status is", 
+    is_unesco_site_present, ".\n")
+#1.2 vector
+
+
+combined_numeric_vector <- c(
+  Avg_temp = trencin_avg_temp, 
+  Population = trencin_population, 
+  Area = trencin_area_sqkm, 
+  Districts = trencin_districts_count 
+)
+print(combined_numeric_vector)
+
+
+sequence_vector <- seq(from = 2, to = 40, by = 6)
+print(sequence_vector)
+
+
+set.seed(7)
+logical_vector <- sample(c(TRUE, FALSE), size = 10, replace = TRUE)
+print(logical_vector)
+
+#1.3 matrix
+
+matrix_data <- sample(-50:50, size = 9, replace = TRUE)
+trencin_matrix <- matrix(data = matrix_data, nrow = 3, ncol = 3, byrow = FALSE)
+row_names <- c("Area (sqkm)", "Population (k)", "Elevation (m)")
+col_names <- c("Historical_data", "Current_data", "Projection")
+dimnames(trencin_matrix) <- list(row_names, col_names)
+print(trencin_matrix)
+#1.4 list
+
+
+trencin_data_list <- list(
+  Name = city_name,
+  Avg_Temperature = trencin_avg_temp,
+  UNESCO_Status = is_unesco_site_present,
+  Numeric_Stats = combined_numeric_vector,
+  Logic_Flags = logical_vector,
+  Matrix_Projections = trencin_matrix
+  )
+print(trencin_data_list)
+#1.5 factor
+
+
+infrastructure_data <- c("High", "Low", "Low", "Medium", "High")
+
+infrastructure_factor <- factor(
+  infrastructure_data,
+  levels = c("Low", "Medium", "High"),
+  ordered = TRUE
+)
+
+
+print(infrastructure_factor)
+
+
+category_counts <- table(infrastructure_factor)
+print(category_counts)
+#1.6 data frame
+Cities <- c("Trenčín", "Bratislava", "Košice", "Žilina", "Banská Bystrica", "Prešov")
+Populations_k <- as.integer(c(55, 437, 230, 85, 76, 88))
+Area_sqkm <- c(82.6, 367.6, 242.8, 115.8, 103.4, 70.4)
+Is_Regional_Center <- c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
+Has_River <- c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
+
+cities_comparison_df <- data.frame(
+  City_Name = Cities,
+  Population_k = Populations_k,
+  Area_sqkm = Area_sqkm,
+  Is_Reg_Center = Is_Regional_Center,
+  Has_Major_River = Has_River
+)
+
+
+cities_comparison_df$Density_per_sqkm <- cities_comparison_df$Population_k / cities_comparison_df$Area_sqkm
+
+print("\nFinal Data Frame:")
+print(cities_comparison_df)
+
+print("\nStructure (str()):")
+str(cities_comparison_df)
+
+print("\nSummary (summary()):")
+summary(cities_comparison_df)
