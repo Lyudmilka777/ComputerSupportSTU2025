@@ -1,7 +1,7 @@
 ---
 title: "(Trenčín)"
 author: "Luidmila Filippova"
-date: "11/10/2024"
+date: "10/27/2024"
 format:
   html:
     embed-resources: true
@@ -14,45 +14,55 @@ editor: source
 
 
 ```{r}
-# 1.1 Atomic Variables
 trencin_avg_temp <- 9.5
 trencin_area_sqkm <- 82.6
 trencin_elevation_m <- 210.0
 trencin_growth_rate <- 0.002
+
 trencin_population <- as.integer(55500)
 trencin_districts_count <- 1L
 trencin_first_mention_year <- as.integer(1069)
+
 is_unesco_site_present <- FALSE
 has_sea_access <- FALSE
+
 city_name <- "Trenčín"
 city_region <- "Trenčín Region"
 main_river <- "Váh"
 cat(city_name, "was first mentioned in", trencin_first_mention_year, 
-    "with an average annual temperature of", trencin_avg_temp, "°C, and its UNESCO status is", is_unesco_site_present, ".\n")
+    "with an average annual temperature of", trencin_avg_temp, "°C, and its UNESCO status is", 
+    is_unesco_site_present, ".\n")
+#1.2 vector
 
-# 1.2 Vector
+
 combined_numeric_vector <- c(
-  Avg_temp = trencin_avg_temp,
-  Population = trencin_population,
-  Area = trencin_area_sqkm,
-  Districts = trencin_districts_count
+  Avg_temp = trencin_avg_temp, 
+  Population = trencin_population, 
+  Area = trencin_area_sqkm, 
+  Districts = trencin_districts_count 
 )
 print(combined_numeric_vector)
-set.seed(7)
+
+
 sequence_vector <- seq(from = 2, to = 40, by = 6)
 print(sequence_vector)
+
+
+set.seed(7)
 logical_vector <- sample(c(TRUE, FALSE), size = 10, replace = TRUE)
 print(logical_vector)
 
-# 1.3 Matrix
+#1.3 matrix
+
 matrix_data <- sample(-50:50, size = 9, replace = TRUE)
 trencin_matrix <- matrix(data = matrix_data, nrow = 3, ncol = 3, byrow = FALSE)
 row_names <- c("Area (sqkm)", "Population (k)", "Elevation (m)")
 col_names <- c("Historical_data", "Current_data", "Projection")
 dimnames(trencin_matrix) <- list(row_names, col_names)
 print(trencin_matrix)
+#1.4 list
 
-# 1.4 List
+
 trencin_data_list <- list(
   Name = city_name,
   Avg_Temperature = trencin_avg_temp,
@@ -60,26 +70,32 @@ trencin_data_list <- list(
   Numeric_Stats = combined_numeric_vector,
   Logic_Flags = logical_vector,
   Matrix_Projections = trencin_matrix
-)
+  )
 print(trencin_data_list)
+#1.5 factor
 
-# 1.5 Factor
+
 infrastructure_data <- c("High", "Low", "Low", "Medium", "High")
+
 infrastructure_factor <- factor(
   infrastructure_data,
   levels = c("Low", "Medium", "High"),
   ordered = TRUE
 )
+
+
 print(infrastructure_factor)
+
+
 category_counts <- table(infrastructure_factor)
 print(category_counts)
-
-# 1.6 Data Frame
+#1.6 data frame
 Cities <- c("Trenčín", "Bratislava", "Košice", "Žilina", "Banská Bystrica", "Prešov")
 Populations_k <- as.integer(c(55, 437, 230, 85, 76, 88))
 Area_sqkm <- c(82.6, 367.6, 242.8, 115.8, 103.4, 70.4)
 Is_Regional_Center <- c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
 Has_River <- c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
+
 cities_comparison_df <- data.frame(
   City_Name = Cities,
   Population_k = Populations_k,
@@ -87,69 +103,15 @@ cities_comparison_df <- data.frame(
   Is_Reg_Center = Is_Regional_Center,
   Has_Major_River = Has_River
 )
+
+
 cities_comparison_df$Density_per_sqkm <- cities_comparison_df$Population_k / cities_comparison_df$Area_sqkm
 
 print("\nFinal Data Frame:")
 print(cities_comparison_df)
+
 print("\nStructure (str()):")
 str(cities_comparison_df)
+
 print("\nSummary (summary()):")
 summary(cities_comparison_df)
-
-
-# 2.1. Querying Vectors
-cat("\n--- 2.1. Querying Vectors ---\n")
-cat("Sequence vector 3rd element:", sequence_vector[3], "\n")
-cat("Sequence vector elements 2-5:", sequence_vector[2:5], "\n")
-cat("Sequence vector values > 20:", sequence_vector[sequence_vector > 20], "\n")
-cat("Logical vector TRUE values:", logical_vector[logical_vector], "\n")
-cat("Indices of TRUE values:", which(logical_vector == TRUE), "\n")
-
-
-# 2.2. Querying Your "Universe" List
-cat("\n--- 2.2. Querying List ---\n")
-cat("List element 'Name' ($ operator):", trencin_data_list$Name, "\n")
-cat("List element 'Matrix_Projections' ([[ ]] operator):\n")
-print(trencin_data_list[["Matrix_Projections"]])
-cat("Second element from 'Numeric_Stats' vector (list-within-list access):", trencin_data_list$Numeric_Stats[2], "\n")
-
-
-# 2.3. Investigating Your Data Frame
-cat("\n--- 2.3. Investigating Data Frame ---\n")
-cat("First 3 rows (head()):\n")
-print(head(cities_comparison_df, 3))
-cat("Value from 4th row, 1st column:", cities_comparison_df[4, 1], "\n")
-cat("Logical column 'Has_Major_River' as a vector:\n")
-print(cities_comparison_df$Has_Major_River)
-df_subset <- cities_comparison_df[cities_comparison_df$Population_k > 80, ]
-cat("Logical subset (Population_k > 80):\n")
-print(df_subset)
-df_subset_2 <- cities_comparison_df[cities_comparison_df$City_Name %in% c("Trenčín", "Košice"), ]
-cat("%in% subset (Trenčín, Košice):\n")
-print(df_subset_2)
-
-
-# 2.4. Handling “Corrupted” Data (NA)
-cat("\n--- 2.4. Handling NA Data ---\n")
-df_corrupted <- cities_comparison_df
-df_corrupted[2, 3] <- NA
-df_corrupted[4, 2] <- NA
-df_corrupted[6, 5] <- NA
-cat("Corrupted Data Frame:\n")
-print(df_corrupted)
-cat("Total number of missing values:", sum(is.na(df_corrupted)), "\n")
-cat("NA count per column (colSums(is.na())): \n")
-print(colSums(is.na(df_corrupted)))
-cat("Mean of Area_sqkm (with NA):", mean(df_corrupted$Area_sqkm), "\n")
-cat("Mean of Area_sqkm (na.rm = TRUE):", mean(df_corrupted$Area_sqkm, na.rm = TRUE), "\n")
-df_clean <- na.omit(df_corrupted)
-cat("Clean Data Frame (na.omit):\n")
-print(df_clean)
-
-
-# 2.5. Bonus Challenge: which()
-cat("\n--- 2.5. Bonus Challenge: which() ---\n")
-highest_pop_index <- which.max(cities_comparison_df$Population_k)
-cat("Index of highest population:", highest_pop_index, "\n")
-cat("Row with the highest population:\n")
-print(cities_comparison_df[highest_pop_index, ])
