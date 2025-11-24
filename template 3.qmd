@@ -1,0 +1,67 @@
+---
+title: "(avocado)"
+author: "Luidmila Filippova"
+date: "11/21/2024"
+format:
+  html:
+    embed-resources: true
+editor: source
+---
+
+````markdown
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
+library(dplyr) 
+library(readr) 
+avocado_data <- read_csv("avocado.csv")
+```
+
+### Question 1: What is the average price difference between organic and conventional avocados?
+
+```{r}
+avocado_data %>% 
+  group_by(type) %>% 
+  summarise(Avg_Price = mean(AveragePrice, na.rm = TRUE)) %>% 
+  arrange(Avg_Price)
+```
+
+### Question 2: Which regions had the highest total volume of sales in 2018?
+
+```{r}
+avocado_data %>% 
+  filter(year == 2018) %>% 
+  group_by(region) %>% 
+  summarise(Total_Volume = sum(`Total Volume`, na.rm = TRUE)) %>% 
+  arrange(desc(Total_Volume)) %>% 
+  head(5)
+```
+
+### Question 3: Calculate the percentage of Total Volume represented by Small Bags.
+
+```{r}
+avocado_data %>% 
+  mutate(Small_Bag_Percent = (`Small Bags` / `Total Volume`) * 100) %>% 
+  select(region, Date, Small_Bag_Percent) %>% 
+  arrange(desc(Small_Bag_Percent))
+```
+
+### Question 4: List the Average Price and Total Volume for all organic sales in New York.
+
+```{r}
+avocado_data %>% 
+  filter(region == "NewYork", type == "organic") %>% 
+  select(Date, AveragePrice, `Total Volume`) %>% 
+  arrange(desc(Date))
+```
+
+### Question 5: Find the region with the lowest average price across all years.
+
+```{r}
+avocado_data %>% 
+  group_by(region) %>% 
+  summarise(Overall_Avg_Price = mean(AveragePrice, na.rm = TRUE)) %>% 
+  arrange(Overall_Avg_Price) %>% 
+  head(1)
+```
+
+```
+```
