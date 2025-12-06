@@ -1,0 +1,96 @@
+---
+title: "Avocado Analysis Toolkit"
+author: "Filippova Luidmila"
+date: "12/01/2024"
+format:
+  html:
+    embed-resources: true
+editor: source
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library(dplyr)
+library(readr)
+```
+
+# Task 4 – Building a Toolkit for the Avocado Dataset
+
+## 4.1 — Greeting Function
+
+```{r}
+welcome_to_my_universe <- function(user_name) {
+  cat("--------------------------------\n")
+  cat("Avocado Analysis Toolkit\n")
+  cat("Prepared by:", user_name, "\n")
+  cat("--------------------------------\n\n")
+}
+
+welcome_to_my_universe("Luidmila Filippova")
+```
+
+## 4.2 — Loading Function
+
+```{r}
+load_and_inspect <- function(file_path) {
+
+  data <- read_csv(file_path, na = c("", "NA"))
+  
+  cat("--- Data Loaded Successfully ---\n")
+  print(glimpse(data))
+  cat("\n--- First 6 Rows ---\n")
+  print(head(data))
+  
+  return(data)
+}
+
+avocado_data <- load_and_inspect("avocado.csv")
+```
+
+## 4.3 — Query Function
+
+### (Find the cities/regions with highest average price)
+
+```{r}
+find_top_expensive_regions <- function(data, top_n = 5) {
+
+  result <- data %>%
+    group_by(region) %>%
+    summarise(avg_price = mean(AveragePrice, na.rm = TRUE)) %>%
+    arrange(desc(avg_price)) %>%
+    head(top_n)
+
+  return(result)
+}
+
+top_regions <- find_top_expensive_regions(avocado_data, 5)
+top_regions
+```
+
+## 4.4 — Reporting Function
+
+### (Detailed report for a given region)
+
+```{r}
+generate_region_report <- function(data, region_name) {
+
+  filtered <- data %>%
+    filter(region == region_name)
+
+  avg_price <- mean(filtered$AveragePrice, na.rm = TRUE)
+  max_price <- max(filtered$AveragePrice, na.rm = TRUE)
+  min_price <- min(filtered$AveragePrice, na.rm = TRUE)
+  count_records <- nrow(filtered)
+
+  cat("----------------------------------------\n")
+  cat("Report for Region:", region_name, "\n")
+  cat("Number of Records:", count_records, "\n")
+  cat("Average Price:", round(avg_price, 2), "\n")
+  cat("Maximum Price:", max_price, "\n")
+  cat("Minimum Price:", min_price, "\n")
+  cat("----------------------------------------\n\n")
+}
+
+# Example reports
+generate_region_report(avocado_data, "LosAngeles")
+generate_region_report(avocado_data, "Chicago")
+```
