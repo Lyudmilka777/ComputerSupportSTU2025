@@ -1,0 +1,131 @@
+---
+title: "avacado"
+author: "Luidmila Filippova"
+date: "12/09/2025"
+format:
+  html:
+    embed-resources: true
+editor: source
+
+---
+
+
+```{r}
+#| label: setup-data-loading
+#| message: false
+#| warning: false
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(scales) # For custom axis scales if needed
+
+# 1. Load the dataset
+# Use check.names = FALSE to handle column names with spaces like 'Total Volume'
+df <- read.csv("avocado.csv", check.names = FALSE) %>%
+  # Remove the unnamed index column which is often the first column
+  select(-1) %>%
+  # Convert year to factor for categorical plotting/faceting
+  mutate(year = as.factor(year)) %>%
+  # Create a log-transformed Total Volume column for scatter plot (5.2)
+  mutate(Log_Total_Volume = log10(`Total Volume` + 1)) 
+```
+
+## 5.1. The Quick Sketch (Base R Histogram)
+
+Uses the base R `hist()` function to examine the distribution of `AveragePrice`.
+
+```{r}
+#| label: quick-sketch-avocado
+#| fig-cap: "5.1. Base R Histogram of Average Avocado Price"
+
+# Choose one numeric variable: AveragePrice
+hist(df$AveragePrice,
+     main = "Distribution of Average Avocado Price", # Custom main title
+     xlab = "Average Price (USD)",                   # Custom xlab
+     ylab = "Frequency (Count of Observations)",
+     col = "darkgreen",                              # Custom bar col
+     border = "white")
+```
+
+## 5.2. The Relationship Map (ggplot2 Scatter Plot)
+
+Uses `ggplot2` to examine the relationship between the **Log-transformed Total Volume** and the **Average Price**. Includes `geom_smooth()` to visualize the trend.
+
+```{r}
+#| label: relationship-map-avocado
+#| fig-cap: "5.2. ggplot2 Scatter Plot: Total Sales Volume (Log) vs. Average Price"
+#| message: false
+#| warning: false
+
+# Choose two numeric variables: Log_Total_Volume and AveragePrice
+ggplot(data = df, aes(x = Log_Total_Volume, y = AveragePrice)) +
+  geom_point(alpha = 0.3, size = 2, colour = "orange") + 
+  geom_smooth(method = "loess", color = "darkred") + # Add geom_smooth()
+  labs(title = "Relationship between Total Volume Sold and Average Price",
+       subtitle = "Total Volume is log10-transformed due to skew",
+       x = "Log10(Total Volume Sold)",
+       y = "Average Price (USD)") +
+  theme_minimal()
+```
+
+## 5.3. The Comparison (ggplot2 Boxplot)
+
+Compares the distribution of `AveragePrice` (numeric) across different `type`s of avocado (categorical).
+
+```{r}
+#| label: comparison-boxplot-avocado
+#| fig-cap: "5.3. ggplot2 Boxplot: Price Comparison by Avocado Type"
+#| message: false
+#| warning: false
+
+# X-axis: Categorical variable (type), Y-axis: Numeric variable (AveragePrice)
+ggplot(data = df, aes(x = type, y = AveragePrice, fill = type)) + 
+  geom_boxplot() +
+  labs(title = "Comparison of Average Avocado Price by Type",
+       x = "Avocado Type",
+       y = "Average Price (USD)") +
+  scale_fill_manual(values = c("conventional" = "lightcoral", "organic" = "darkseagreen")) +
+  theme_light() +
+  theme(legend.position = "none") # Hides legend
+```
+
+## 5.4. The “Deep Dive” (Faceting)
+
+A histogram of `AveragePrice` split (`facet_wrap`) by the `year`, showing how the price distribution has changed over time.
+
+```{r}
+#| label: deep-dive-facet-avocado
+#| fig-cap: "5.4. ggplot2 Faceted Histogram: Average Price Distribution by Year"
+
+# Create a histogram of AveragePrice and split by year
+ggplot(data = df, aes(x = AveragePrice)) +
+  geom_histogram(bins = 20, fill = "seagreen", color = "black") +
+  facet_wrap(~ year, ncol = 2) + # Split the plot by the category variable
+  labs(title = "Distribution of Average Price across Years",
+       x = "Average Price (USD)",
+       y = "Count of Observations") +
+  theme_bw()
+```
+
+## 5.5. Final Step: Exporting (Saving Your Work)
+
+The Faceted Histogram (5.4) is chosen as the favourite plot and saved.
+
+```{r}
+#| label: export-plot-avocado
+#| eval: true
+#| include: false
+
+# Define the plot (5.4) for saving
+favorite_plot <- ggplot(data = df, aes(x = AveragePrice)) +
+  geom_histogram(bins = 20, fill = "seagreen", color = "black") +
+  facet_wrap(~ year, ncol = 2) +
+  labs(title = "Distribution of Average Price across Years",
+       x = "Average Price (USD)",
+       y = "Count of Observations") +
+  theme_bw()
+
+# Save the plot
+ggsave("my_universe_plot.png", plot = favorite_plot, width = 8, height = 6)
+```
